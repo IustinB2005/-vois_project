@@ -1,0 +1,98 @@
+# ==========================
+# Virtual environments
+# ==========================
+venv/
+.env/
+.venv/
+myenvironment/
+env/
+
+
+# ==========================
+# Environment variables / secrets
+# ==========================
+.env
+.env.*
+!.env.example
+
+
+# ==========================
+# Python cache
+# ==========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+# ==========================
+# Python build files
+# ==========================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+
+# ==========================
+# Testing
+# ==========================
+.pytest_cache/
+.coverage
+htmlcov/
+
+
+# ==========================
+# Type checkers / linters
+# ==========================
+.mypy_cache/
+.ruff_cache/
+
+
+# ==========================
+# Jupyter
+# ==========================
+.ipynb_checkpoints/
+
+
+# ==========================
+# IDEs
+# ==========================
+.vscode/
+.idea/
+
+
+# ==========================
+# OS generated files
+# ==========================
+.DS_Store
+Thumbs.db
+
+
+# ==========================
+# Logs
+# ==========================
+*.log
+logs/
+
+
+# ==========================
+# Database local files
+# ==========================
+*.sqlite
+*.sqlite3
+*.db
+
+
+# ==========================
+# Node
+# ==========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# ==========================
+# Docker local overrides
+# ==========================
+docker-compose.override.yml
