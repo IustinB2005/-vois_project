@@ -1,0 +1,1 @@
+de legat token jwt legat cu frontendul pentru logare.
