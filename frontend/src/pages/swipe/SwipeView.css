@@ -1,0 +1,186 @@
+/* Layout Principal preluat din designul general */
+.page-container {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #fcfcfc;
+  background-image: 
+    linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+    linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+  background-size: 48px 48px;
+  font-family: sans-serif;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header */
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 20;
+}
+
+.brand-logo {
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Conținut Principal */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding: 2rem 1.5rem;
+}
+
+.watermark-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.watermark-bg span {
+  font-size: 20vw;
+  font-weight: 900;
+  color: rgba(243, 244, 246, 0.7);
+  letter-spacing: -0.05em;
+  user-select: none;
+}
+
+/* Zona de carduri și titluri */
+.swipe-wrapper-container {
+  width: 100%;
+  max-width: 28rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+.page-title {
+  font-size: 3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: #111;
+  margin: 0;
+  text-align: center;
+}
+
+.red-divider {
+  width: 3rem;
+  height: 0.25rem;
+  background-color: #ef4444;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sub-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #9ca3af;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Stiva de carduri Tinder */
+.card-container {
+  width: 300px;
+  height: 420px;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.swipe-card-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.movie-card {
+  width: 300px;
+  height: 420px;
+  background-color: #eaeaea;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0px 15px 35px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: flex-end;
+  cursor: grab;
+  border: 1px solid #e5e7eb;
+}
+
+.card-overlay {
+  width: 100%;
+  padding: 1.5rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.card-title {
+  color: white;
+  margin: 0;
+  font-size: 22px; /* Corectat din fontSize în font-size */
+  font-weight: bold;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+.finished-card {
+  width: 300px;
+  height: 420px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 10px 25px rgba(0,0,0,0.05);
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  color: #111;
+  font-weight: bold;
+}
+
+/* Butonul de Rewind */
+.rewind-btn {
+  background-color: #111;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  padding: 0.85rem 2rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-radius: 4px;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+}
+
+.rewind-btn:hover {
+  background-color: #ef4444;
+}
