@@ -7,6 +7,10 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
+    environment:
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - SECRET_KEY=cheie_secreta_super_sigura_12345
+      - ALGORITHM=HS256
 
   frontend:
     build: ./frontend
@@ -17,3 +21,4 @@ services:
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
+    
