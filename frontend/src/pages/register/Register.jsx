@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import RegisterView from './RegisterView';
 
 function Register() {
   const navigate = useNavigate();
@@ -31,7 +32,6 @@ function Register() {
       });
 
       if (response.ok) {
-       
         navigate('/questions');
       } else {
         const data = await response.json();
@@ -44,7 +44,6 @@ function Register() {
         }
         
         setEroare(errorMessage);
-        
       }
     } catch (error) {
       console.error(error);
@@ -52,41 +51,18 @@ function Register() {
     }
   };
 
+  const handleNavigateToLogin = () => {
+    navigate('/login');
+  };
+
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
-      <h2>Creare Cont Nou</h2>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Nume utilizator"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Parolă"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Înregistrare</button>
-      </form>
-      {eroare && <p style={{ color: 'red' }}>{eroare}</p>}
-      <p style={{ marginTop: '20px' }}>
-        Ai deja cont? <button onClick={() => navigate('/login')}>Intră aici</button>
-      </p>
-    </div>
+    <RegisterView 
+      formData={formData}
+      onChange={handleChange}
+      onSubmit={handleSubmit}
+      errorMessage={eroare}
+      onNavigateLogin={handleNavigateToLogin}
+    />
   );
 }
 

@@ -1,0 +1,193 @@
+/* Layout Principal */
+.page-container {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #fcfcfc;
+  background-image: 
+    linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+    linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+  background-size: 48px 48px;
+  font-family: sans-serif;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Header */
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 20;
+}
+
+.brand-logo {
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Conținut Principal */
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding: 3rem 1.5rem;
+}
+
+.watermark-bg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.watermark-bg span {
+  font-size: 22vw;
+  font-weight: 900;
+  color: rgba(243, 244, 246, 0.7);
+  letter-spacing: -0.05em;
+  user-select: none;
+}
+
+/* Formular */
+.form-wrapper {
+  width: 100%;
+  max-width: 28rem;
+  position: relative;
+  z-index: 10;
+}
+
+.page-title {
+  font-size: 4.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+  color: #111;
+  margin: 0;
+}
+
+.red-divider {
+  width: 3rem;
+  height: 0.25rem;
+  background-color: #ef4444;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.sub-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #9ca3af;
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+}
+
+.error-message {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #ef4444;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-bottom: 0.75rem;
+}
+
+.label-number {
+  color: #ef4444;
+}
+
+.input-field {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid black;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  color: #111;
+}
+
+.input-field::placeholder {
+  color: #d1d5db;
+}
+
+.input-field:focus {
+  border-color: #ef4444;
+}
+
+/* Butoane și Linkuri */
+.submit-btn {
+  width: 100%;
+  background-color: #111;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  padding: 1.25rem 0;
+  margin-top: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: black;
+}
+
+.form-footer {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.login-link {
+  color: #ef4444;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
