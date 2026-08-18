@@ -21,3 +21,7 @@ class LobbyOut(BaseModel):
     users: List[MemberOut] = []
 
     model_config = {"from_attributes": True}
+
+class SwipeAction(BaseModel):
+    movie_id: int
+    is_like: bool
