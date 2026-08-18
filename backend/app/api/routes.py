@@ -11,7 +11,11 @@ from app.api.dependencies import get_current_user
 from fastapi.security import OAuth2PasswordRequestForm
 from app.models.lobby import Lobby
 from app.schemas.lobby import LobbyOut, LobbyJoin
-
+from app.core.tmdb import (
+    search_movies,
+    discover_movies,
+    get_movie_genres
+)
 
 router = APIRouter()
 
@@ -212,3 +216,29 @@ def get_me(
         "username": current_user.username,
         "email": current_user.email
     }
+
+
+@router.get("/movies")
+def get_movies(
+    year: int | None = None,
+    genre: int | None = None,
+    current_user: User = Depends(get_current_user)
+):
+    return discover_movies(
+        year=year,
+        genre=genre
+    )
+
+
+@router.get("/movies/genres")
+def get_genres(
+    current_user: User = Depends(get_current_user)
+):
+    return get_movie_genres()
+
+@router.get("/movies/search")
+def search_movie(
+    name: str,
+    current_user: User = Depends(get_current_user)
+):
+    return search_movies(name)
