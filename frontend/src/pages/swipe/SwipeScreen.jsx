@@ -1,4 +1,5 @@
-import { useState, useMemo, createRef, useEffect } from 'react';
+import React, { useState, useMemo, createRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import SwipeView from './SwipeView';
 
 export default function SwipeScreen() {
@@ -6,8 +7,9 @@ export default function SwipeScreen() {
   const [lastAction, setLastAction] = useState(null);
   const [totalMovies, setTotalMovies] = useState(0);
 
-  // Am pus un cod de test aici
-  const lobbyCode = "1234"; 
+  
+  const location = useLocation();
+  const lobbyCode = location.state?.lobbyCode || "1234"; 
 
   useEffect(() => {
     fetch(`http://localhost:8000/lobby/${lobbyCode}/start`, {
@@ -30,7 +32,7 @@ export default function SwipeScreen() {
         }
       })
       .catch((err) => console.error("Error fetching lobby movies:", err));
-  }, []);
+  }, [lobbyCode]);
 
   const childRefs = useMemo(
     () => movies.map(() => createRef()),
@@ -40,16 +42,14 @@ export default function SwipeScreen() {
   const handleSwipe = async (direction, movie, index) => {
     setLastAction({ movie, index });
     
-    
     const voteData = {
       movie_id: movie.id,
       is_like: direction === 'right' 
     };
 
-    console.log(`Vote for ${movie.title}:`, voteData);
+    console.log(`Vote for ${movie.title || movie.nume}:`, voteData);
 
     try {
-      
       const response = await fetch(`http://localhost:8000/lobby/${lobbyCode}/swipe`, {
         method: 'POST',
         headers: {
@@ -61,9 +61,8 @@ export default function SwipeScreen() {
 
       const result = await response.json();
 
-      
       if (result.status === "perfect_match") {
-        alert("Avem un Perfect Match! Rata aprobare 100%"); // Aici vom pune ecranul tau de victorie mai tarziu
+        alert("Avem un Perfect Match! Rata aprobare 100%");
       } else if (result.status === "partial_match") {
         console.log("Meci partial! Aprobare >= 70%");
       } else if (result.status === "waiting") {

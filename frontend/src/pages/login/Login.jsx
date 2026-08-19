@@ -31,7 +31,7 @@ export default function Login() {
 
       if (response.ok) {
         localStorage.setItem('token', data.access_token || data.token);
-        navigate('/room');
+        navigate('/home');
       } else {
         let errorMessage = 'Email sau parolă incorectă.';
         if (typeof data.detail === 'string') {

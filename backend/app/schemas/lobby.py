@@ -21,3 +21,8 @@ class LobbyOut(BaseModel):
     users: List[MemberOut] = []
 
     model_config = {"from_attributes": True}
+
+
+class VoteCreate(BaseModel):
+    movie_id: int
+    is_like: bool
