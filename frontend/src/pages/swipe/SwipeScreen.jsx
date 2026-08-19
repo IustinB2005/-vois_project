@@ -1,52 +1,77 @@
 import { useState, useMemo, createRef, useEffect } from 'react';
 import SwipeView from './SwipeView';
 
-const filmeTest = [
-  { id: 101, nume: 'Interstellar', urlImagine: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MvrIdZ2O.jpg' },
-  { id: 102, nume: 'Inception', urlImagine: 'https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg' },
-  { id: 103, nume: 'The Dark Knight', urlImagine: 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg' }
+const mockMovies = [
+  { id: 101, title: 'Interstellar', poster_url: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MvrIdZ2O.jpg' },
+  { id: 102, title: 'Inception', poster_url: 'https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg' },
+  { id: 103, title: 'The Dark Knight', poster_url: 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg' }
 ];
 
 export default function SwipeScreen() {
-  const [filme, setFilme] = useState(filmeTest);
-  const [ultimaActiune, setUltimaActiune] = useState(null);
-  const totalFilme = filmeTest.length;
+  const [movies, setMovies] = useState(mockMovies);
+  const [lastAction, setLastAction] = useState(null);
+  const totalMovies = mockMovies.length;
 
-  // Pregătit pentru momentul în care colegul adaugă ruta de filme în backend
+  // FETCH INTEGRATION: 
+  // Once your backend colleagues provide the movie recommendation route (e.g., /api/lobby/movies), 
+  // uncomment the block below to fetch real data bound to the user's token and lobby.
   /*
   useEffect(() => {
-    fetch('http://localhost:8000/api/movies', {
+    fetch('http://localhost:8000/lobby/movies', {
+      method: 'GET',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json'
       }
     })
       .then((res) => res.json())
-      .then((data) => setFilme(data))
-      .catch((err) => console.log("Eroare la preluarea filmelor:", err));
+      .then((data) => {
+        setMovies(data);
+      })
+      .catch((err) => console.error("Error fetching lobby movies:", err));
   }, []);
   */
 
   const childRefs = useMemo(
-    () => filme.map(() => createRef()),
-    [filme]
+    () => movies.map(() => createRef()),
+    [movies]
   );
 
-  const onSwipe = (direction, film, index) => {
-    setUltimaActiune({ film, index });
-    if (direction === 'right') {
-      console.log(`❤️ LIKE trimis pentru: ${film.nume}`);
-    } else if (direction === 'left') {
-      console.log(`❌ PASS trimis pentru: ${film.nume}`);
+  const handleSwipe = async (direction, movie, index) => {
+    setLastAction({ movie, index });
+    
+    const voteData = {
+      movieId: movie.id,
+      vote: direction === 'right' ? 'like' : 'pass'
+    };
+
+    console.log(`Vote registered: ${voteData.vote} for ${movie.title || movie.nume}`);
+
+    // SEND VOTE TO BACKEND:
+    /*
+    try {
+      await fetch('http://localhost:8000/lobby/vote', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(voteData)
+      });
+    } catch (error) {
+      console.error("Failed to submit vote:", error);
     }
-    setFilme((prevFilme) => prevFilme.filter((f) => f.id !== film.id));
+    */
+
+    setMovies((prevMovies) => prevMovies.filter((m) => m.id !== movie.id));
   };
 
-  const anuleazaUltimulSwipe = async () => {
-    if (!ultimaActiune) return;
-    const { film, index } = ultimaActiune;
+  const handleRewind = async () => {
+    if (!lastAction) return;
+    const { movie, index } = lastAction;
     
-    setFilme((prev) => [film, ...prev]);
-    setUltimaActiune(null);
+    setMovies((prev) => [movie, ...prev]);
+    setLastAction(null);
 
     if (childRefs[index] && childRefs[index].current) {
       await childRefs[index].current.restoreCard();
@@ -55,12 +80,12 @@ export default function SwipeScreen() {
 
   return (
     <SwipeView
-      filme={filme}
-      totalFilme={totalFilme}
+      movies={movies}
+      totalMovies={totalMovies}
       childRefs={childRefs}
-      onSwipe={onSwipe}
-      ultimaActiune={ultimaActiune}
-      anuleazaUltimulSwipe={anuleazaUltimulSwipe}
+      onSwipe={handleSwipe}
+      lastAction={lastAction}
+      handleRewind={handleRewind}
     />
   );
 }

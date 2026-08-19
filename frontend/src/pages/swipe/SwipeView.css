@@ -1,4 +1,3 @@
-/* Layout Principal preluat din designul general */
 .page-container {
   min-height: 100vh;
   width: 100%;
@@ -15,7 +14,6 @@
   overflow: hidden;
 }
 
-/* Header */
 .top-header {
   display: flex;
   justify-content: space-between;
@@ -34,7 +32,6 @@
   text-transform: uppercase;
 }
 
-/* Conținut Principal */
 .main-content {
   flex: 1;
   display: flex;
@@ -65,7 +62,6 @@
   user-select: none;
 }
 
-/* Zona de carduri și titluri */
 .swipe-wrapper-container {
   width: 100%;
   max-width: 28rem;
@@ -105,7 +101,6 @@
   text-align: center;
 }
 
-/* Stiva de carduri Tinder */
 .card-container {
   width: 300px;
   height: 420px;
@@ -144,7 +139,7 @@
 .card-title {
   color: white;
   margin: 0;
-  font-size: 22px; /* Corectat din fontSize în font-size */
+  font-size: 22px;
   font-weight: bold;
   text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
 }
@@ -165,7 +160,6 @@
   font-weight: bold;
 }
 
-/* Butonul de Rewind */
 .rewind-btn {
   background-color: #111;
   color: white;

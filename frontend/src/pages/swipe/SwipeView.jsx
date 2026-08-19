@@ -3,12 +3,12 @@ import TinderCard from 'react-tinder-card';
 import './SwipeView.css';
 
 const SwipeView = ({
-  filme,
-  totalFilme,
+  movies,
+  totalMovies,
   childRefs,
   onSwipe,
-  ultimaActiune,
-  anuleazaUltimulSwipe
+  lastAction,
+  handleRewind
 }) => {
   return (
     <div className="page-container">
@@ -19,7 +19,6 @@ const SwipeView = ({
 
       <main className="main-content">
         
-        {/* Watermark pe fundal exact ca la Login/Register */}
         <div className="watermark-bg">
           <span>SWIPE</span>
         </div>
@@ -33,26 +32,26 @@ const SwipeView = ({
           <div className="red-divider"></div>
           
           <p className="sub-title">
-            {filme.length > 0 
-              ? `Filme rămase: ${filme.length} din ${totalFilme}` 
-              : 'Ai terminat toate filmele! 🎉'}
+            {movies.length > 0 
+              ? `Movies remaining: ${movies.length} of ${totalMovies}` 
+              : 'Waiting for other room members...'}
           </p>
 
           <div className="card-container">
-            {filme.length > 0 ? (
-              filme.map((film, index) => (
-                <div key={film.id} className="swipe-card-wrapper">
+            {movies.length > 0 ? (
+              movies.map((movie, index) => (
+                <div key={movie.id} className="swipe-card-wrapper">
                   <TinderCard
                     ref={childRefs[index]}
-                    onSwipe={(dir) => onSwipe(dir, film, index)}
+                    onSwipe={(direction) => onSwipe(direction, movie, index)}
                     preventSwipe={['up', 'down']}
                   >
                     <div 
                       className="movie-card" 
-                      style={{ backgroundImage: `url(${film.urlImagine})` }}
+                      style={{ backgroundImage: `url(${movie.urlImagine || movie.poster_url})` }}
                     >
                       <div className="card-overlay">
-                        <h3 className="card-title">{film.nume}</h3>
+                        <h3 className="card-title">{movie.nume || movie.title}</h3>
                       </div>
                     </div>
                   </TinderCard>
@@ -60,14 +59,14 @@ const SwipeView = ({
               ))
             ) : (
               <div className="finished-card">
-                <h3>Se așteaptă ceilalți din cameră...</h3>
+                <h3>Syncing results with the lobby...</h3>
               </div>
             )}
           </div>
 
-          {ultimaActiune && filme.length < totalFilme && (
-            <button className="rewind-btn" onClick={anuleazaUltimulSwipe}>
-              ⟲ Anulare Swipe
+          {lastAction && movies.length < totalMovies && (
+            <button className="rewind-btn" onClick={handleRewind}>
+              ⟲ Rewind Swipe
             </button>
           )}
 
