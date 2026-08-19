@@ -1,36 +1,36 @@
 import { useState, useMemo, createRef, useEffect } from 'react';
 import SwipeView from './SwipeView';
 
-const mockMovies = [
-  { id: 101, title: 'Interstellar', poster_url: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MvrIdZ2O.jpg' },
-  { id: 102, title: 'Inception', poster_url: 'https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg' },
-  { id: 103, title: 'The Dark Knight', poster_url: 'https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg' }
-];
-
 export default function SwipeScreen() {
-  const [movies, setMovies] = useState(mockMovies);
+  const [movies, setMovies] = useState([]);
   const [lastAction, setLastAction] = useState(null);
-  const totalMovies = mockMovies.length;
+  const [totalMovies, setTotalMovies] = useState(0);
 
-  // FETCH INTEGRATION: 
-  // Once your backend colleagues provide the movie recommendation route (e.g., /api/lobby/movies), 
-  // uncomment the block below to fetch real data bound to the user's token and lobby.
-  /*
+  // Am pus un cod de test aici
+  const lobbyCode = "1234"; 
+
   useEffect(() => {
-    fetch('http://localhost:8000/lobby/movies', {
-      method: 'GET',
+    fetch(`http://localhost:8000/lobby/${lobbyCode}/start`, {
+      method: 'POST', 
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json'
       }
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`Eroare server: ${res.status}`);
+        return res.json();
+      })
       .then((data) => {
-        setMovies(data);
+        if (data && Array.isArray(data.movies)) {
+          setMovies(data.movies);
+          setTotalMovies(data.movies.length);
+        } else {
+          console.error("Nu s-a gasit array-ul movies in raspuns:", data);
+        }
       })
       .catch((err) => console.error("Error fetching lobby movies:", err));
   }, []);
-  */
 
   const childRefs = useMemo(
     () => movies.map(() => createRef()),
@@ -40,17 +40,17 @@ export default function SwipeScreen() {
   const handleSwipe = async (direction, movie, index) => {
     setLastAction({ movie, index });
     
+    
     const voteData = {
-      movieId: movie.id,
-      vote: direction === 'right' ? 'like' : 'pass'
+      movie_id: movie.id,
+      is_like: direction === 'right' 
     };
 
-    console.log(`Vote registered: ${voteData.vote} for ${movie.title || movie.nume}`);
+    console.log(`Vote for ${movie.title}:`, voteData);
 
-    // SEND VOTE TO BACKEND:
-    /*
     try {
-      await fetch('http://localhost:8000/lobby/vote', {
+      
+      const response = await fetch(`http://localhost:8000/lobby/${lobbyCode}/swipe`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -58,10 +58,21 @@ export default function SwipeScreen() {
         },
         body: JSON.stringify(voteData)
       });
+
+      const result = await response.json();
+
+      
+      if (result.status === "perfect_match") {
+        alert("Avem un Perfect Match! Rata aprobare 100%"); // Aici vom pune ecranul tau de victorie mai tarziu
+      } else if (result.status === "partial_match") {
+        console.log("Meci partial! Aprobare >= 70%");
+      } else if (result.status === "waiting") {
+        console.log("Vot inregistrat. Asteptam colegii...");
+      }
+
     } catch (error) {
-      console.error("Failed to submit vote:", error);
+      console.error("Eroare la trimiterea votului:", error);
     }
-    */
 
     setMovies((prevMovies) => prevMovies.filter((m) => m.id !== movie.id));
   };
