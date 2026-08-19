@@ -339,3 +339,20 @@ def swipe_movie(
             "movie_id": vote_data.movie_id,
             "message": "Filmul a picat testul. Treceti la urmatorul."
         }
+    
+
+
+@router.get("/movies/recommendations")
+def get_movie_recommendations(
+    current_user: User = Depends(get_current_user)
+):
+    movies = []
+
+    for page in range(1, 4):
+        response = discover_movies()
+
+        movies.extend(response.get("results", []))
+
+    return {
+        "movies": movies[:30]
+    }
