@@ -9,8 +9,9 @@ from app.models.user import User
 from app.schemas.user import UserCreate, UserLogin
 from app.api.dependencies import get_current_user
 from fastapi.security import OAuth2PasswordRequestForm
-from app.models.lobby import Lobby
-from app.schemas.lobby import LobbyOut, LobbyJoin
+from app.models.lobby import Lobby, Vote
+from app.schemas.lobby import LobbyOut, LobbyJoin,VoteCreate
+
 from app.core.tmdb import (
     search_movies,
     discover_movies,
@@ -86,7 +87,35 @@ def lobby_status(
 
     return lobby
 
-@router.post("/lobby/{code}/start", response_model=LobbyOut)
+
+
+
+TMDB_GENRES_MAP = {
+    "Actiune": "28",
+    "Comedie": "35",
+    "Drama": "18",
+    "Horror": "27",
+    "Romantic": "10749",
+    "SF": "878"
+}
+
+DECADE_STARTS_MAP = {
+    "1970-1980": "1970-01-01",
+    "1980-1990": "1980-01-01",
+    "1990-2000": "1990-01-01",
+    "2000-2010": "2000-01-01",
+    "2010-2020": "2010-01-01",
+    "2020+": "2020-01-01"
+}
+
+
+
+
+
+
+
+
+@router.post("/lobby/{code}/start")
 def start_lobby(
     code: str,
     db: Session = Depends(get_db),
@@ -103,11 +132,41 @@ def start_lobby(
     if len(lobby.users) < 2:
         raise HTTPException(status_code=400, detail="Ai nevoie de cel putin 2 membri")
 
+# 2. Agregarea preferintelor (Intersectie / Reuniune)
+    unique_genres = set()
+    oldest_date = "2099-01-01" # O data default in caz ca e ceva in neregula
+
+    for user in lobby.users:
+        # Adaugam genul tradus in set pt a elimina duplicatele
+        if user.preferred_genre in TMDB_GENRES_MAP:
+            unique_genres.add(TMDB_GENRES_MAP[user.preferred_genre])
+        
+        # Gasim cel mai vechi an ales de grup
+        if user.preferred_decade in DECADE_STARTS_MAP:
+            user_date = DECADE_STARTS_MAP[user.preferred_decade]
+            if user_date < oldest_date:
+                oldest_date = user_date
+
+    # 3. Pregatim datele pentru TMDB
+    # Daca avem genuri, le lipim cu "|" (ex: "28|35"). Daca nu, lasam None.
+    genres_or_string = "|".join(unique_genres) if unique_genres else None
+    
+    # 4. Apelam functia din core/tmdb.py
+    tmdb_response = discover_movies(
+        release_date_gte=oldest_date,
+        genres_or=genres_or_string
+    )
+
+
     lobby.status = "matching"
     db.commit()
     db.refresh(lobby)
 
-    return lobby
+    return {
+        "message": "Lobby-ul a inceput",
+        "lobby_status": lobby.status,
+        "movies": tmdb_response.get("results", [])
+    }
 
 @router.post("/register")
 def register(
@@ -218,27 +277,65 @@ def get_me(
     }
 
 
-@router.get("/movies")
-def get_movies(
-    year: int | None = None,
-    genre: int | None = None,
+
+@router.post("/lobby/{code}/swipe")
+def swipe_movie(
+    code: str,
+    vote_data: VoteCreate,
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    return discover_movies(
-        year=year,
-        genre=genre
+    lobby = db.query(Lobby).filter(Lobby.code == code.upper()).first()
+    if not lobby:
+        raise HTTPException(status_code=404, detail="Cod invalid")
+
+    # 1. Salvam votul in baza de date
+    new_vote = Vote(
+        lobby_id=lobby.id,
+        user_id=current_user.id,
+        movie_id=vote_data.movie_id,
+        is_like=vote_data.is_like
     )
+    db.add(new_vote)
+    db.commit()
 
+    # 2. Luam toate voturile date pentru ACEST film in ACEST lobby
+    movie_votes = db.query(Vote).filter(
+        Vote.lobby_id == lobby.id,
+        Vote.movie_id == vote_data.movie_id
+    ).all()
 
-@router.get("/movies/genres")
-def get_genres(
-    current_user: User = Depends(get_current_user)
-):
-    return get_movie_genres()
+    total_users = len(lobby.users)
+    total_votes = len(movie_votes)
 
-@router.get("/movies/search")
-def search_movie(
-    name: str,
-    current_user: User = Depends(get_current_user)
-):
-    return search_movies(name)
+    # Daca nu au votat toti, nu calculam nimic inca
+    if total_votes < total_users:
+        return {"status": "waiting", "message": "Vot inregistrat. Asteptam restul grupului."}
+
+    # 3. Au votat toti! Calculam pragul.
+    likes = sum(1 for v in movie_votes if v.is_like)
+    ratio = likes / total_users
+
+    # Cazul 1: 100% Perfect Match
+    if ratio == 1.0:
+        return {
+            "status": "perfect_match",
+            "movie_id": vote_data.movie_id,
+            "message": "Perfect Match! Toti au dat Like."
+        }
+    
+    # Cazul 2: >= 70% Partial Match
+    elif ratio >= 0.7:
+        return {
+            "status": "partial_match",
+            "movie_id": vote_data.movie_id,
+            "message": f"Partial Match! {int(ratio * 100)}% au dat Like."
+        }
+    
+    # Cazul 3: Sub 70% (Prea multe Pass-uri)
+    else:
+        return {
+            "status": "failed",
+            "movie_id": vote_data.movie_id,
+            "message": "Filmul a picat testul. Treceti la urmatorul."
+        }
