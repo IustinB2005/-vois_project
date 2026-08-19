@@ -1,0 +1,244 @@
+.home-container {
+  min-height: 100vh;
+  background-color: #ffffff;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.background-watermark {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18vw;
+  font-weight: 900;
+  color: rgba(0, 0, 0, 0.02);
+  letter-spacing: -2px;
+  z-index: 0;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Header superior */
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 50px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 1;
+}
+
+.logo {
+  font-weight: 900;
+  letter-spacing: 2px;
+  font-size: 16px;
+}
+
+.header-right-text {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #777;
+}
+
+/* Conținut Principal */
+.home-main {
+  padding: 40px 50px;
+  max-width: 1250px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+/* Bara de căutare și butoanele de sus */
+.search-bar-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 50px;
+  width: 100%;
+}
+
+.search-box-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #111;
+  padding: 12px 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.search-icon {
+  margin-right: 12px;
+  font-size: 14px;
+}
+
+.top-search-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  outline: none;
+  letter-spacing: 0.5px;
+}
+
+.top-search-input::placeholder {
+  color: #999;
+}
+
+.top-action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.top-btn {
+  padding: 13px 22px;
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-btn {
+  background: #ffffff;
+  color: #111;
+  border: 1px solid #111;
+}
+
+.logout-btn:hover {
+  background: #111;
+  color: #fff;
+}
+
+.lobby-btn {
+  background: #111;
+  color: #fff;
+  border: 1px solid #111;
+}
+
+.lobby-btn:hover {
+  background: #ff4757;
+  border-color: #ff4757;
+}
+
+/* Titlul paginii */
+.title-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 45px;
+}
+
+.main-title {
+  font-size: 58px;
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -1.5px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.red-accent-line {
+  width: 40px;
+  height: 3px;
+  background-color: #ff4757;
+  margin: 18px 0 10px 0;
+}
+
+.subtitle {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #777;
+  font-weight: 800;
+  margin: 0;
+}
+
+/* Grila de filme */
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.movie-card {
+  background: #ffffff;
+  border: 1px solid #111;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+}
+
+.movie-index {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #ff4757;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 6px 10px;
+  z-index: 2;
+}
+
+.movie-poster-wrapper {
+  width: 100%;
+  height: 340px;
+  background-color: #eaeaea;
+  overflow: hidden;
+}
+
+.movie-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(105%);
+}
+
+.movie-info {
+  padding: 18px;
+  background: #ffffff;
+  border-top: 1px solid #111;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.movie-title {
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  margin: 0;
+  color: #111;
+  line-height: 1.2;
+}
+
+.movie-details {
+  font-size: 10px;
+  font-weight: 700;
+  color: #777;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
