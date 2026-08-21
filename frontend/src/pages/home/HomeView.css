@@ -1,3 +1,7 @@
+/* fonturi importate de pe google */
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Jost:wght@300;400;500;600;700&family=Figtree:wght@300;400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* cutia principala care tine toata pagina si fundalul cu grila */
 .home-container {
   min-height: 100vh;
   background-color: #ffffff;
@@ -5,7 +9,7 @@
     linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
   background-size: 40px 40px;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: 'Jost', sans-serif;
   color: #111;
   display: flex;
   flex-direction: column;
@@ -14,45 +18,72 @@
   overflow-x: hidden;
 }
 
+/* linia rosie si subtila care se misca pe fundal */
+.scan-line {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: rgba(220, 60, 70, 0.15);
+  box-shadow: 0 0 10px rgba(220, 60, 70, 0.15);
+  animation: scan-animation 8s linear infinite;
+  pointer-events: none;
+  z-index: 0; 
+}
+
+/* animatia pentru linia rosie de pe fundal */
+@keyframes scan-animation {
+  0% { top: 85px; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { top: 100vh; opacity: 0; }
+}
+
+/* textul foarte mare si transparent din fundal */
 .background-watermark {
   position: absolute;
-  top: 55%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 18vw;
+  font-size: 16vw;
   font-weight: 900;
-  color: rgba(0, 0, 0, 0.02);
+  color: rgba(0, 0, 0, 0.025);
   letter-spacing: -2px;
   z-index: 0;
   pointer-events: none;
   white-space: nowrap;
 }
 
-/* Header superior */
+/* bara de sus a paginii unde stau logo si statusul */
 .home-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 25px 50px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 30px 60px;
+  border-bottom: 2px solid #111;
   position: relative;
-  z-index: 1;
+  background-color: #ffffff; 
+  z-index: 2;
 }
 
+/* textul cinematch din stanga sus */
 .logo {
+  font-family: 'Teko', sans-serif;
   font-weight: 900;
   letter-spacing: 2px;
-  font-size: 16px;
+  font-size: 24px;
 }
 
+/* textul din dreapta sus (home) */
 .header-right-text {
-  font-size: 11px;
+  font-family: 'Teko', sans-serif;
+  font-size: 16px;
   font-weight: 800;
   letter-spacing: 2px;
   color: #777;
 }
 
-/* Conținut Principal */
+/* zona centrala a paginii unde se schimba continutul */
 .home-main {
   padding: 40px 50px;
   max-width: 1250px;
@@ -63,7 +94,7 @@
   z-index: 1;
 }
 
-/* Bara de căutare și butoanele de sus */
+/* sectiunea superioara cu input-ul de cautare si butoanele */
 .search-bar-section {
   display: flex;
   align-items: center;
@@ -72,27 +103,31 @@
   width: 100%;
 }
 
+/* chenarul din jurul barei de cautare */
 .search-box-wrapper {
   flex: 1;
   display: flex;
   align-items: center;
   background: #ffffff;
-  border: 1px solid #111;
+  border: 2px solid #111;
   padding: 12px 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
 }
 
+/* iconita de cautare (lupa) */
 .search-icon {
   margin-right: 12px;
-  font-size: 14px;
+  color: #111;
+  display: flex;
+  align-items: center;
 }
 
+/* campul unde scrie utilizatorul pentru a cauta */
 .top-search-input {
   width: 100%;
   border: none;
   background: transparent;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 15px;
+  font-family: 'Jost', sans-serif;
   color: #111;
   outline: none;
   letter-spacing: 0.5px;
@@ -102,35 +137,44 @@
   color: #999;
 }
 
+/* containerul pentru butoanele de logout si lobby */
 .top-action-buttons {
   display: flex;
   gap: 10px;
 }
 
+/* clasa de baza pentru butoanele mici de sus */
 .top-btn {
-  padding: 13px 22px;
-  font-weight: 900;
-  font-size: 12px;
+  padding: 10px 22px;
+  font-family: 'Teko', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+/* butonul alb de deconectare */
 .logout-btn {
   background: #ffffff;
   color: #111;
-  border: 1px solid #111;
+  border: 2px solid #111;
 }
 
 .logout-btn:hover {
-  background: #111;
+  background: #ff4757;
+  border-color: #ff4757;
   color: #fff;
 }
 
+/* butonul negru catre lobby */
 .lobby-btn {
   background: #111;
   color: #fff;
-  border: 1px solid #111;
+  border: 2px solid #111;
 }
 
 .lobby-btn:hover {
@@ -138,7 +182,7 @@
   border-color: #ff4757;
 }
 
-/* Titlul paginii */
+/* grupul care contine titlul mare si subtitrarea */
 .title-section {
   display: flex;
   flex-direction: column;
@@ -146,15 +190,18 @@
   margin-bottom: 45px;
 }
 
+/* titlul urias (for you) */
 .main-title {
-  font-size: 58px;
+  font-family: 'Teko', sans-serif;
+  font-size: 85px;
   font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -1.5px;
+  line-height: 0.85;
+  letter-spacing: -2px;
   margin: 0;
   text-transform: uppercase;
 }
 
+/* liniuta rosie de decor de sub titlu */
 .red-accent-line {
   width: 40px;
   height: 3px;
@@ -162,54 +209,64 @@
   margin: 18px 0 10px 0;
 }
 
+/* textul mai mic de sub titlu */
 .subtitle {
-  font-size: 10px;
-  letter-spacing: 2px;
+  font-family: 'Teko', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2.5px;
   color: #777;
-  font-weight: 800;
+  font-weight: 700;
   margin: 0;
 }
 
-/* Grila de filme */
+/* grila care afiseaza posterele cu filme */
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 25px;
 }
 
+/* cardul individual pentru fiecare film */
 .movie-card {
   background: #ffffff;
-  border: 1px solid #111;
+  border: 2px solid #111;
   display: flex;
   flex-direction: column;
   position: relative;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  cursor: default;
+  height: 100%;
 }
 
 .movie-card:hover {
   transform: translateY(-5px);
+  border-color: #ff4757;
 }
 
+/* patratul rosu cu numarul filmului (ex: 01) */
 .movie-index {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 10px;
+  left: 10px;
   background-color: #ff4757;
   color: white;
-  font-size: 11px;
-  font-weight: 900;
-  padding: 6px 10px;
+  font-family: 'Teko', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 2px 8px;
   z-index: 2;
+  letter-spacing: 1px;
 }
 
+/* containerul pentru imaginea filmului */
 .movie-poster-wrapper {
   width: 100%;
-  height: 340px;
+  aspect-ratio: 2/3;
   background-color: #eaeaea;
   overflow: hidden;
 }
 
+/* imaginea propriu-zisa a filmului */
 .movie-poster {
   width: 100%;
   height: 100%;
@@ -217,28 +274,38 @@
   filter: contrast(105%);
 }
 
+/* sectiunea alba de sub poster cu detalii */
 .movie-info {
-  padding: 18px;
+  padding: 14px 16px 18px;
   background: #ffffff;
-  border-top: 1px solid #111;
+  border-top: 2px solid #111;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  /* Obliga cutia alba sa ocupe tot spatiul ramas pana jos */
+  flex-grow: 1; 
+  /* Impinge titlul sus de tot si detaliile (an, regizor) jos de tot pentru o aliniere perfecta in linie */
+  justify-content: space-between; 
+  gap: 12px;
 }
-
+/* numele filmului */
 .movie-title {
-  font-size: 13px;
-  font-weight: 900;
+  font-family: 'Teko', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
   letter-spacing: 0.5px;
   margin: 0;
   color: #111;
-  line-height: 1.2;
+  line-height: 1.1;
+  text-transform: uppercase;
 }
 
+/* anul si regizorul */
 .movie-details {
-  font-size: 10px;
-  font-weight: 700;
-  color: #777;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #888;
   margin: 0;
-  letter-spacing: 0.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }

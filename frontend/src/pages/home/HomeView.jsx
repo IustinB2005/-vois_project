@@ -1,16 +1,35 @@
 import React from 'react';
 import './HomeView.css';
 
+/* Iconițe SVG */
+const SearchIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <path d="m21 21-4.3-4.3"/>
+  </svg>
+);
+
+const LogoutIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+    <polyline points="16 17 21 12 16 7"/>
+    <line x1="21" y1="12" x2="9" y2="12"/>
+  </svg>
+);
+
 export default function HomeView({ onLogout, onNavigateLobby }) {
-  // Filmele recomandate cu detaliile vizibile din imagine (Titlu, An, Regizor/Detalii)
   const recommendedMovies = [
-    { title: 'PARASITE', year: '2019', director: 'Bong Joon-ho', image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&auto=format&fit=crop&q=60' },
-    { title: 'DUNE', year: '2021', director: 'Denis Villeneuve', image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=500&auto=format&fit=crop&q=60' },
+    { title: 'PARASITE', year: '2019', director: 'Bong Joon-ho', image: 'https://images.unsplash.com/photo-1614201842267-206a09286c3b?w=500&auto=format&fit=crop&q=60' },
+    { title: 'DUNE', year: '2021', director: 'Denis Villeneuve', image: 'https://images.unsplash.com/photo-1679129396357-6b11683760bc?w=500&auto=format&fit=crop&q=60' },
     { title: 'INTERSTELLAR', year: '2014', director: 'Christopher Nolan', image: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=500&auto=format&fit=crop&q=60' },
-    { title: 'EVERYTHING EVERYWHERE ALL AT ONCE', year: '2022', director: 'The Daniels', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=60' }
+    { title: 'EVERYTHING EVERYWHERE ALL AT ONCE', year: '2022', director: 'The Daniels', image: 'https://images.unsplash.com/photo-1603236405450-e74c465a89a8?w=500&auto=format&fit=crop&q=60' }
   ];
+
   return (
     <div className="home-container">
+      {/* Linia roșie animată care se plimbă pe fundal */}
+      <div className="scan-line"></div>
+
       {/* Watermark mare în fundal */}
       <div className="background-watermark">HOME</div>
 
@@ -26,7 +45,7 @@ export default function HomeView({ onLogout, onNavigateLobby }) {
         {/* Bara de căutare sus + Butoanele LOGOUT și LOBBY alăturate */}
         <div className="search-bar-section">
           <div className="search-box-wrapper">
-            <span className="search-icon">🔍</span>
+            <span className="search-icon"><SearchIcon /></span>
             <input 
               type="text" 
               placeholder="Search for a movie, director, actor..." 
@@ -36,7 +55,7 @@ export default function HomeView({ onLogout, onNavigateLobby }) {
 
           <div className="top-action-buttons">
             <button onClick={onLogout} className="top-btn logout-btn">
-              ↪ LOGOUT
+              <LogoutIcon /> LOGOUT
             </button>
             <button onClick={onNavigateLobby} className="top-btn lobby-btn">
               LOBBY

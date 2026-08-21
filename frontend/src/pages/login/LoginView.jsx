@@ -8,58 +8,63 @@ const LoginView = ({
   onPasswordChange,
   onSubmit,
   errorMessage,
-  onRegisterClick // Am adăugat prop-ul nou pentru navigare
+  onRegisterClick
 }) => {
   return (
-    <div className="page-container">
-      
-      <header className="top-header">
-        <div className="brand-logo">Cinematch</div>
-        
+    <div className="login-container">
+      {/* Linia roșie animată care se plimbă pe fundal */}
+      <div className="scan-line"></div>
+
+      {/* Watermark mare în fundal */}
+      <div className="background-watermark">CM</div>
+
+      {/* Header cu Logo stânga și status dreapta sus */}
+      <header className="login-header">
+        <div className="logo">CINEMATCH</div>
+        <div className="header-right-text">SIGN IN</div>
       </header>
 
-      <main className="main-content">
+      {/* Conținut Principal */}
+      <main className="login-main">
         
-        <div className="watermark-bg">
-          <span>CM</span>
-        </div>
+        {/* Banner de eroare, afișat doar dacă există o eroare */}
+        {errorMessage && (
+          <div className="error-banner">
+            {errorMessage}
+          </div>
+        )}
 
-        <div className="form-wrapper">
+        <div className="form-screen-wrapper">
           
-          <h1 className="page-title">
-            Sign<br />In.
-          </h1>
-          
-          <div className="red-divider"></div>
-          
-          <p className="sub-title">
-            Welcome back to Cinematch
-          </p>
+          {/* Titlul Paginii */}
+          <div className="title-section">
+            <h1 className="main-title">SIGN<br />IN.</h1>
+            <div className="red-line"></div>
+            <p className="subtitle">WELCOME BACK TO CINEMATCH</p>
+          </div>
 
-          {errorMessage && (
-            <div className="error-message">
-              {errorMessage}
-            </div>
-          )}
-
-          <form onSubmit={onSubmit} className="login-form">
-            <div className="input-group">
-              <label htmlFor="email" className="input-label">
+          {/* Formularul de Autentificare */}
+          <form onSubmit={onSubmit} className="industrial-form">
+            
+            {/* Input Email */}
+            <div className="input-block">
+              <label htmlFor="email" className="input-tag">
                 <span className="label-number">01</span> Email Address
               </label>
               <input
                 id="email"
-                type="text" // Modificat în text dacă API-ul așteaptă 'username' și poate fi un nume de utilizator
+                type="text"
                 value={email}
                 onChange={onEmailChange}
-                placeholder="Email / Nume utilizator"
-                className="input-field"
+                placeholder="you@example.com"
+                className="industrial-input"
                 required
               />
             </div>
 
-            <div className="input-group">
-              <label htmlFor="password" className="input-label">
+            {/* Input Password */}
+            <div className="input-block">
+              <label htmlFor="password" className="input-tag">
                 <span className="label-number">02</span> Password
               </label>
               <input
@@ -68,25 +73,23 @@ const LoginView = ({
                 value={password}
                 onChange={onPasswordChange}
                 placeholder="........"
-                className="input-field"
+                className="industrial-input"
                 required
               />
             </div>
 
-            <button type="submit" className="submit-btn">
-              Sign In
+            {/* Buton Sign In */}
+            <button type="submit" className="massive-black-btn">
+              SIGN IN
             </button>
           </form>
 
+          {/* Link către Înregistrare */}
           <div className="form-footer">
-            No account?{' '}
-            <span 
-              className="register-link" 
-              onClick={onRegisterClick} // Declanșăm funcția la click
-              style={{ cursor: 'pointer' }}
-            >
+            No account?
+            <button type="button" className="text-link" onClick={onRegisterClick}>
               Register here
-            </span>
+            </button>
           </div>
           
         </div>

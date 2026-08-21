@@ -1,6 +1,19 @@
 import React from 'react';
 import './LobbyView.css';
 
+/* Iconițe SVG simple în loc de emoji-uri */
+const UsersIcon = () => (
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+);
+
+const CrownIcon = () => (
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/>
+  </svg>
+);
+
 export default function LobbyView({
   view,
   setView,
@@ -15,6 +28,9 @@ export default function LobbyView({
 }) {
   return (
     <div className="lobby-container">
+      {/* Linia roșie animată care se plimbă pe fundal */}
+      <div className="scan-line"></div>
+
       {/* Watermark dinamic în fundal în funcție de ecran */}
       <div className="background-watermark">
         {view === 'menu' && 'LOBBY'}
@@ -49,14 +65,14 @@ export default function LobbyView({
             <div className="split-cards-container">
               {/* Card Join (Alb) */}
               <div className="lobby-card white-card" onClick={() => setView('join')}>
-                <div className="card-icon">👥</div>
+                <div className="card-icon"><UsersIcon /></div>
                 <h2>JOIN A LOBBY</h2>
                 <p>ENTER A ROOM CODE</p>
               </div>
 
               {/* Card Host (Negru) */}
               <div className="lobby-card black-card" onClick={onCreateHost}>
-                <div className="card-icon">👑</div>
+                <div className="card-icon"><CrownIcon /></div>
                 <h2>BE A HOST</h2>
                 <p>CREATE YOUR ROOM</p>
               </div>
@@ -84,13 +100,14 @@ export default function LobbyView({
                 <span className="input-tag">01 ROOM CODE</span>
                 <input 
                   type="text" 
-                  placeholder="CM-0000" 
+                  placeholder="A1B2C" 
                   value={joinCode}
+                  maxLength={5}
                   onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                   className="industrial-input"
                   required
                 />
-                <span className="input-hint">FORMAT: CM-XXXX</span>
+                <span className="input-hint">FORMAT: XXXXX</span>
               </div>
 
               <button type="submit" className="massive-black-btn">
@@ -129,7 +146,7 @@ export default function LobbyView({
               <span className="input-tag">02 PLAYERS IN LOBBY ({roomData.users?.length || 1})</span>
               <div className="players-table">
                 {roomData.users?.map((u, i) => (
-                  <div key={u.id} className="player-row">
+                  <div key={u.id || i} className="player-row">
                     <div className="player-avatar-box">
                       {u.username.substring(0, 2).toUpperCase()}
                     </div>
@@ -164,15 +181,15 @@ export default function LobbyView({
                 onClick={() => navigator.clipboard.writeText(roomData.code)} 
                 className="copy-code-btn"
               >
-                📋 COPY CODE
+                COPY CODE
               </button>
             </div>
 
             <div className="players-section">
               <span className="input-tag">02 PLAYERS IN LOBBY ({roomData.users?.length || 1})</span>
               <div className="players-table">
-                {roomData.users?.map((u) => (
-                  <div key={u.id} className="player-row">
+                {roomData.users?.map((u, i) => (
+                  <div key={u.id || i} className="player-row">
                     <div className="player-avatar-box">
                       {u.username.substring(0, 2).toUpperCase()}
                     </div>

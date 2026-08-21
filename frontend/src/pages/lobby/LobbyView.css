@@ -1,3 +1,7 @@
+/* fonturi importate de pe google */
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Jost:wght@300;400;500;600;700&family=Figtree:wght@300;400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* cutia principala care tine toata pagina si fundalul cu grila */
 .lobby-container {
   min-height: 100vh;
   background-color: #ffffff;
@@ -5,7 +9,7 @@
     linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
   background-size: 40px 40px;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: 'Jost', sans-serif;
   color: #111;
   display: flex;
   flex-direction: column;
@@ -14,6 +18,28 @@
   overflow-x: hidden;
 }
 
+/* linia rosie si subtila care se misca pe fundal */
+.scan-line {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: rgba(220, 60, 70, 0.15);
+  box-shadow: 0 0 10px rgba(220, 60, 70, 0.15);
+  animation: scan-animation 8s linear infinite;
+  pointer-events: none;
+  z-index: 0; 
+}
+
+/* animatia pentru linia rosie de pe fundal */
+@keyframes scan-animation {
+  0% { top: 85px; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { top: 100vh; opacity: 0; }
+}
+
+/* textul foarte mare si transparent din fundal */
 .background-watermark {
   position: absolute;
   top: 50%;
@@ -28,29 +54,36 @@
   white-space: nowrap;
 }
 
+/* bara de sus a paginii unde stau logo si statusul */
 .lobby-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 30px 60px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 2px solid #111;
   position: relative;
-  z-index: 1;
+  background-color: #ffffff; 
+  z-index: 2;
 }
 
+/* textul cinematch din stanga sus */
 .logo {
+  font-family: 'Teko', sans-serif;
   font-weight: 900;
   letter-spacing: 2px;
-  font-size: 18px;
+  font-size: 24px;
 }
 
+/* textul din dreapta sus cum ar fi lobby sau joining lobby */
 .header-status {
-  font-size: 11px;
+  font-family: 'Teko', sans-serif;
+  font-size: 24px;
   font-weight: 800;
   letter-spacing: 2px;
   color: #777;
 }
 
+/* zona centrala a paginii unde se schimba continutul */
 .lobby-main {
   flex: 1;
   display: flex;
@@ -61,6 +94,7 @@
   z-index: 1;
 }
 
+/* mesajul rosu de eroare de sus */
 .error-banner {
   position: absolute;
   top: 10px;
@@ -72,7 +106,7 @@
   letter-spacing: 1px;
 }
 
-/* Structura Titlurilor */
+/* grupul care contine titlul mare si subtitrarea */
 .title-section {
   display: flex;
   flex-direction: column;
@@ -81,15 +115,19 @@
   margin-bottom: 40px;
 }
 
+/* titlul urias din centrul paginii */
 .main-title {
-  font-size: 52px;
+  font-family: 'Teko', sans-serif;
+  font-size: 85px;
   font-weight: 900;
   line-height: 1;
-  letter-spacing: -1px;
+  letter-spacing: -2px;
   margin: 0;
   text-transform: uppercase;
+  color: #111;
 }
 
+/* liniuta rosie de decor de sub titlu */
 .red-line {
   width: 40px;
   height: 3px;
@@ -97,15 +135,17 @@
   margin: 18px 0 12px 0;
 }
 
+/* textul mai mic de sub titlu cum ar fi pick your mode */
 .subtitle {
-  font-size: 10px;
+  font-family: 'Teko', sans-serif;
+  font-size: 18px;
   letter-spacing: 2.5px;
   color: #777;
   font-weight: 700;
   margin: 0;
 }
 
-/* 1. Meniul Principal cu Carduri Split (Alb & Negru) */
+/* cutia care tine ambele butoane mari de selectie */
 .menu-wrapper {
   display: flex;
   flex-direction: column;
@@ -114,16 +154,17 @@
   max-width: 750px;
 }
 
+/* impartirea egala a butoanelor mari pe ecran */
 .split-cards-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0;
   width: 100%;
   border: 2px solid #111;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
   margin-bottom: 30px;
 }
 
+/* setari comune pentru ambele butoane mari */
 .lobby-card {
   padding: 60px 30px;
   display: flex;
@@ -131,45 +172,64 @@
   align-items: center;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
+/* culorile pentru butonul alb de join */
 .white-card {
   background-color: #ffffff;
   color: #111;
   border-right: 2px solid #111;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+/* comportamentul butonului alb cand pui mouse-ul pe el */
+.white-card:hover {
+  background-color: #111;
+  color: #ffffff;
+}
+
+/* culorile pentru butonul negru de host */
 .black-card {
   background-color: #111;
   color: #ffffff;
 }
 
-.lobby-card:hover {
-  transform: translateY(-3px);
+/* comportamentul butonului negru cand pui mouse-ul pe el */
+.black-card:hover {
+  background-color: #ff4757;
 }
 
+/* asezarea iconitelor de deasupra textului in butoane */
 .card-icon {
-  font-size: 32px;
   margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+/* textele principale din butoanele mari */
 .lobby-card h2 {
-  font-size: 22px;
+  font-family: 'Teko', sans-serif;
+  font-size: 36px;
   font-weight: 900;
   letter-spacing: 1px;
   margin: 0 0 10px 0;
+  color: inherit;
+  text-transform: uppercase;
 }
 
+/* textele secundare din butoanele mari */
 .lobby-card p {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 1.5px;
   font-weight: 700;
   opacity: 0.7;
   margin: 0;
+  color:inherit;
 }
 
-/* 2. Ecrane de Formulare (Join & Host & Waiting) */
+/* cutia centrala pentru ecranele unde bagi codul de camera */
 .form-screen-wrapper {
   display: flex;
   flex-direction: column;
@@ -178,6 +238,7 @@
   max-width: 520px;
 }
 
+/* formularul pentru introdus codul */
 .industrial-form {
   width: 100%;
   display: flex;
@@ -185,12 +246,14 @@
   gap: 30px;
 }
 
+/* gruparea etichetei si a campului de scris */
 .input-block {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
+/* eticheta mica si rosie de deasupra campului de scris */
 .input-tag {
   font-size: 10px;
   font-weight: 900;
@@ -199,6 +262,7 @@
   margin-bottom: 8px;
 }
 
+/* campul propriu zis unde tasteaza utilizatorul */
 .industrial-input {
   width: 100%;
   padding: 14px 0;
@@ -212,12 +276,20 @@
   text-align: center;
   box-sizing: border-box;
   color: #111;
+  transition: border-bottom-color 0.2s;
 }
 
+/* comportamentul campului cand dai click in el */
+.industrial-input:focus {
+  border-bottom-color: #ff4757;
+}
+
+/* textul orientativ din camp inainte sa scrii ceva */
 .industrial-input::placeholder {
   color: #ccc;
 }
 
+/* explicatia mica de sub camp cum trebuie scris codul */
 .input-hint {
   font-size: 9px;
   letter-spacing: 1.5px;
@@ -225,6 +297,7 @@
   margin-top: 6px;
 }
 
+/* butonul lung si negru de actiune cum ar fi join room */
 .massive-black-btn {
   width: 100%;
   background-color: #111;
@@ -238,11 +311,12 @@
   transition: background-color 0.2s;
 }
 
+/* comportamentul butonului negru si lung la trecerea mouse-ului */
 .massive-black-btn:hover {
   background-color: #ff4757;
 }
 
-/* Cutii Cod & Tabele Jucători */
+/* cutia in care este afisat codul camerei cand esti host */
 .code-display-box {
   background: #ffffff;
   border: 2px solid #111;
@@ -253,10 +327,12 @@
   margin-bottom: 25px;
 }
 
+/* cutie folosita pentru pozitionare */
 .bordered-box {
   position: relative;
 }
 
+/* textul mare al codului de camera */
 .code-value {
   font-size: 38px;
   font-weight: 900;
@@ -265,6 +341,7 @@
   margin-top: 5px;
 }
 
+/* butonul mic de copiat codul */
 .copy-code-btn {
   background: none;
   border: none;
@@ -276,6 +353,7 @@
   margin-top: 12px;
 }
 
+/* zona de asteptare cu bulina rosie */
 .waiting-status-box {
   display: flex;
   align-items: center;
@@ -288,6 +366,7 @@
   color: #555;
 }
 
+/* bulina rosie care pulseaza */
 .pulse-dot {
   width: 8px;
   height: 8px;
@@ -296,17 +375,20 @@
   animation: pulse 1.5s infinite;
 }
 
+/* animatia de pulsare a bulinei */
 @keyframes pulse {
   0% { transform: scale(0.95); opacity: 0.8; }
   50% { transform: scale(1.3); opacity: 1; }
   100% { transform: scale(0.95); opacity: 0.8; }
 }
 
+/* zona cu lista de jucatori */
 .players-section {
   width: 100%;
   margin-bottom: 25px;
 }
 
+/* tabelul in sine cu toti jucatorii */
 .players-table {
   width: 100%;
   border: 1px solid rgba(0,0,0,0.1);
@@ -314,6 +396,7 @@
   margin-top: 8px;
 }
 
+/* randul unui singur jucator */
 .player-row {
   display: flex;
   align-items: center;
@@ -321,10 +404,12 @@
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
+/* linia se sterge pentru ultimul jucator din lista */
 .player-row:last-child {
   border-bottom: none;
 }
 
+/* patratul negru cu initialele jucatorului */
 .player-avatar-box {
   width: 30px;
   height: 30px;
@@ -338,6 +423,7 @@
   margin-right: 15px;
 }
 
+/* numele jucatorului din lista */
 .player-name {
   flex: 1;
   font-weight: 800;
@@ -345,20 +431,24 @@
   letter-spacing: 0.5px;
 }
 
+/* starea jucatorului cum ar fi connected sau ready */
 .player-status {
   font-size: 10px;
   font-weight: 900;
   letter-spacing: 1px;
 }
 
+/* culoarea rosie aplicata cand jucatorul este gata */
 .player-status.ready {
   color: #ff4757;
 }
 
+/* zona de jos cu butonul de inapoi */
 .footer-nav {
   margin-top: 25px;
 }
 
+/* butonul mic si rosu cu sagetica inapoi */
 .text-link {
   background: none;
   border: none;
@@ -369,6 +459,7 @@
   cursor: pointer;
 }
 
+/* comportamentul textului de inapoi cand pui mouse-ul pe el */
 .text-link:hover {
   text-decoration: underline;
 }
