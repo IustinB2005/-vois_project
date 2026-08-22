@@ -8,6 +8,7 @@ export default function SwipeScreen() {
   const [totalMovies, setTotalMovies] = useState(0);
   const [match, setMatch] = useState(null); 
   const [allMoviesCache, setAllMoviesCache] = useState({}); 
+  const [showGiveUpModal, setShowGiveUpModal] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -116,7 +117,7 @@ export default function SwipeScreen() {
     }
   };
 
-  // ECRANUL DE MATCH REDESIGNAT ÎN STILUL INDUSTRIAL
+  // ECRANUL DE MATCH
   if (match) {
     return (
       <div className="page-container">
@@ -125,31 +126,31 @@ export default function SwipeScreen() {
 
         <header className="top-header">
           <div className="brand-logo">CINEMATCH</div>
-          <div className="header-right-text" style={{ fontFamily: 'Teko, sans-serif', fontSize: '16px', fontWeight: 800, letterSpacing: '2px', color: '#ff4757', textTransform: 'uppercase' }}>
+          <div className="header-right-text match-header-text">
             IT'S A MATCH!
           </div>
         </header>
 
         <main className="main-content">
           <div className="swipe-wrapper-container">
-            <div className="title-section" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '30px' }}>
-              <h1 className="main-title" style={{ fontSize: '70px', lineHeight: '0.9', margin: 0 }}>IT'S A<br />MATCH!</h1>
+            <div className="title-section match-title-section">
+              <h1 className="page-title match-title-main">IT'S A<br />MATCH!</h1>
               <div className="red-divider"></div>
-              <p className="subtitle" style={{ fontFamily: 'Teko, sans-serif', fontSize: '18px', letterSpacing: '2.5px', color: '#777', fontWeight: 700, margin: 0 }}>EVERYONE WANTS TO WATCH</p>
+              <p className="sub-title">EVERYONE WANTS TO WATCH</p>
             </div>
             
             <div className="card-container">
               <div 
-                className="movie-card" 
-                style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w500${match.poster_path})`, cursor: 'default' }}
+                className="movie-card match-movie-card" 
+                style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w500${match.poster_path})` }}
               >
                 <div className="card-overlay">
-                  <h3 className="card-title">{match.nume || match.title}</h3>
+                  <h3 className="card-title">{match.title || match.original_title}</h3>
                 </div>
               </div>
             </div>
 
-            <button className="massive-black-btn" onClick={() => navigate('/lobby')} style={{ marginTop: '30px', width: '300px' }}>
+            <button className="rewind-btn match-back-btn" onClick={() => navigate('/lobby')}>
               ← BACK TO LOBBY
             </button>
           </div>
@@ -158,14 +159,72 @@ export default function SwipeScreen() {
     );
   }
 
+  // ECRANUL DE EȘEC (FAILED TO FIND A MATCH)
+  if (movies.length === 0 && totalMovies > 0) {
+    return (
+      <div className="page-container">
+        <div className="scan-line"></div>
+        <div className="background-watermark">FAILED</div>
+        
+        <header className="top-header">
+          <div className="brand-logo">CINEMATCH</div>
+          <div className="header-right-text failed-header-text">END OF QUEUE</div>
+        </header>
+
+        <main className="main-content failed-main-content">
+          <div className="title-section failed-title-section">
+            <h1 className="page-title failed-title-main">FAILED TO<br />FIND A MATCH.</h1>
+            <div className="red-divider"></div>
+            <p className="sub-title">YOU SWIPED THROUGH ALL AVAILABLE OPTIONS</p>
+          </div>
+
+          <button className="rewind-btn" onClick={() => navigate('/lobby')} style={{ width: '300px' }}>
+            BACK TO LOBBY
+          </button>
+        </main>
+      </div>
+    );
+  }
+
   return (
-    <SwipeView
-      movies={movies}
-      totalMovies={totalMovies}
-      childRefs={childRefs}
-      onSwipe={handleSwipe}
-      lastAction={lastAction}
-      handleRewind={handleRewind}
-    />
+    <>
+      <SwipeView
+        movies={movies}
+        totalMovies={totalMovies}
+        childRefs={childRefs}
+        onSwipe={handleSwipe}
+        lastAction={lastAction}
+        handleRewind={handleRewind}
+        onGiveUpClick={() => setShowGiveUpModal(true)}
+      />
+
+      {/* POP-UP DE CONFIRMARE GIVE UP */}
+      {showGiveUpModal && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h3 className="modal-title">
+              LEAVE LOBBY?
+            </h3>
+            <p className="modal-desc">
+              Are you sure you want to leave the session and return to the lobby?
+            </p>
+            <div className="modal-btn-group">
+              <button 
+                onClick={() => setShowGiveUpModal(false)}
+                className="modal-btn modal-btn-cancel"
+              >
+                CANCEL
+              </button>
+              <button 
+                onClick={() => navigate('/lobby')}
+                className="modal-btn modal-btn-confirm"
+              >
+                YES, GIVE UP
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

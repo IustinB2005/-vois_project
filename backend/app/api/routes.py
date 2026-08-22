@@ -165,42 +165,30 @@ def get_lobby_movies(
     if oldest_date == "2099-01-01":
         oldest_date = None
 
-    # Transformam set-ul intr-o lista sortata alfabetic ca sa fie identica pentru toti
     genres_list = sorted(list(unique_genres))
     genres_or_string = "|".join(genres_list) if genres_list else None
     
-    tmdb_response = discover_movies(
-        release_date_gte=oldest_date, 
-        genres_or=genres_or_string
-    )
+    # Colectăm până la 5 pagini (100 de filme) fără duplicate
+    seen_movie_ids = set()
+    all_unique_movies = []
 
-    return {"movies": tmdb_response.get("results", [])}
-@router.post("/register")
-def register(
-    user: UserCreate,
-    db: Session = Depends(get_db)
-):
+    for page in range(1, 6): # Paginile 1, 2, 3, 4, 5
+        tmdb_response = discover_movies(
+            release_date_gte=oldest_date, 
+            genres_or=genres_or_string,
+            page=page
+        )
+        results = tmdb_response.get("results", [])
+        if not results:
+            break
+            
+        for movie in results:
+            movie_id = movie.get("id")
+            if movie_id not in seen_movie_ids:
+                seen_movie_ids.add(movie_id)
+                all_unique_movies.append(movie)
 
-    new_user = User(
-        username=user.username,
-        email=user.email,
-        password=hash_password(user.password),
-        preferred_decade=user.preferred_decade,
-        preferred_genre=user.preferred_genre
-    )
-
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-
-    return {
-        "id": new_user.id,
-        "username": new_user.username,
-        "email": new_user.email,
-        "preferred_decade": new_user.preferred_decade,
-        "preferred_genre": new_user.preferred_genre
-    }
-
+    return {"movies": all_unique_movies[:100]} # Returnăm maximum 100
 
 @router.get("/users")
 def get_users(
@@ -280,7 +268,9 @@ def get_me(
     return {
         "id": current_user.id,
         "username": current_user.username,
-        "email": current_user.email
+        "email": current_user.email,
+        "preferred_decade": current_user.preferred_decade,
+        "preferred_genre": current_user.preferred_genre
     }
 
 
@@ -396,3 +386,26 @@ def check_lobby_match(
             }
 
     return {"status": "waiting"}
+
+# Noua rută pentru salvarea preferințelor din pagina Questions:
+from app.schemas.user import UserPreferencesUpdate
+
+@router.put("/users/preferences")
+def update_user_preferences(
+    prefs: UserPreferencesUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    if prefs.preferred_decade is not None:
+        current_user.preferred_decade = prefs.preferred_decade
+    if prefs.preferred_genre is not None:
+        current_user.preferred_genre = prefs.preferred_genre
+    
+    db.commit()
+    db.refresh(current_user)
+    
+    return {
+        "message": "Preferințele au fost salvate cu succes",
+        "preferred_decade": current_user.preferred_decade,
+        "preferred_genre": current_user.preferred_genre
+    }

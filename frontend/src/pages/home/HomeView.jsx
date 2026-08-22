@@ -17,7 +17,7 @@ const LogoutIcon = () => (
   </svg>
 );
 
-export default function HomeView({ onLogout, onNavigateLobby }) {
+export default function HomeView({ onLogout, onNavigateLobby, onNavigatePreferences }) {
   const recommendedMovies = [
     { title: 'PARASITE', year: '2019', director: 'Bong Joon-ho', image: 'https://images.unsplash.com/photo-1614201842267-206a09286c3b?w=500&auto=format&fit=crop&q=60' },
     { title: 'DUNE', year: '2021', director: 'Denis Villeneuve', image: 'https://images.unsplash.com/photo-1679129396357-6b11683760bc?w=500&auto=format&fit=crop&q=60' },
@@ -42,7 +42,7 @@ export default function HomeView({ onLogout, onNavigateLobby }) {
       {/* Conținut Principal */}
       <main className="home-main">
         
-        {/* Bara de căutare sus + Butoanele LOGOUT și LOBBY alăturate */}
+        {/* Bara de căutare sus + Butoanele */}
         <div className="search-bar-section">
           <div className="search-box-wrapper">
             <span className="search-icon"><SearchIcon /></span>
@@ -54,11 +54,14 @@ export default function HomeView({ onLogout, onNavigateLobby }) {
           </div>
 
           <div className="top-action-buttons">
-            <button onClick={onLogout} className="top-btn logout-btn">
-              <LogoutIcon /> LOGOUT
+            <button onClick={onNavigatePreferences} className="top-btn logout-btn">
+              Preferences
             </button>
             <button onClick={onNavigateLobby} className="top-btn lobby-btn">
               LOBBY
+            </button>
+            <button onClick={onLogout} className="top-btn logout-btn">
+              <LogoutIcon /> LOGOUT
             </button>
           </div>
         </div>

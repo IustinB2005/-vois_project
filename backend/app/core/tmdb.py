@@ -12,10 +12,12 @@ HEADERS = {
     "accept": "application/json"
 }
 
-def discover_movies(release_date_gte: str | None = None, genres_or: str | None = None):
+def discover_movies(release_date_gte: str | None = None, genres_or: str | None = None,page: int = 1):
     params = {
-        "language": "ro-RO",
-        "sort_by": "popularity.desc"
+        "language": "en-Us",
+        "include_adult": False,
+        "sort_by": "popularity.desc",
+        "page": page
     }
 
     if release_date_gte is not None:

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Register from './pages/register/Register';
 import Login from "./pages/login/Login";
-import Questions from './pages/Questions';
+import QuestionsScreen from './pages/questions/QuestionsScreen';
 import Room from './pages/Room';
 import Home from './pages/home/Home';  
 import Lobby from './pages/lobby/Lobby';
@@ -49,7 +49,7 @@ function App() {
           path="/questions" 
           element={
             <ProtectedRoute>
-              <Questions />
+              <QuestionsScreen />
             </ProtectedRoute>
           } 
         />

@@ -14,6 +14,7 @@ export default function Home() {
     <HomeView 
       onLogout={handleLogout}
       onNavigateLobby={() => navigate('/lobby')}
+      onNavigatePreferences={() => navigate('/questions')}
     />
   );
 }

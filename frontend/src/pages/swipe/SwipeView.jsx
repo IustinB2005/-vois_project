@@ -8,7 +8,8 @@ const SwipeView = ({
   childRefs,
   onSwipe,
   lastAction,
-  handleRewind
+  handleRewind,
+  onGiveUpClick
 }) => {
   return (
     <div className="page-container">
@@ -23,8 +24,16 @@ const SwipeView = ({
 
       <header className="top-header">
         <div className="brand-logo">CINEMATCH</div>
-        <div className="header-right-text" style={{ fontFamily: 'Teko, sans-serif', fontSize: '16px', fontWeight: 800, letterSpacing: '2px', color: '#777', textTransform: 'uppercase' }}>
-          CHOOSING MOVIE
+        
+        {/* Header cu butonul GIVE UP separat frumos în CSS */}
+        <div className="header-right-group">
+          <button onClick={onGiveUpClick} className="give-up-btn">
+            GIVE UP
+          </button>
+          
+          <div className="header-right-text">
+            CHOOSING MOVIE
+          </div>
         </div>
       </header>
 
@@ -60,7 +69,7 @@ const SwipeView = ({
                     style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w500${movie.poster_path})` }}
                   >
                     <div className="card-overlay">
-                      <h3 className="card-title">{movie.nume || movie.title}</h3>
+                      <h3 className="card-title">{movie.title || movie.original_title}</h3>
                     </div>
                   </div>
                 </TinderCard>

@@ -11,3 +11,7 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+class UserPreferencesUpdate(BaseModel):
+    preferred_decade: Optional[Literal["1970-1980", "1980-1990", "1990-2000", "2000-2010", "2010-2020", "2020+"]] = None
+    preferred_genre: Optional[Literal["Actiune", "Comedie", "Drama", "Horror", "Romantic", "SF"]] = None

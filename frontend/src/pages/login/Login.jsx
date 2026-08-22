@@ -30,8 +30,33 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('token', data.access_token || data.token);
-        navigate('/home');
+        const token = data.access_token || data.token;
+        localStorage.setItem('token', token);
+
+        // Verificăm dacă userul are preferințele setate prin ruterul /me
+        try {
+          const userResponse = await fetch('http://localhost:8000/me', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          if (userResponse.ok) {
+            const userData = await userResponse.json();
+            
+            // Dacă îi lipsește genul sau decada, îl trimitem la întrebări
+            if (!userData.preferred_genre || !userData.preferred_decade) {
+              navigate('/questions');
+            } else {
+              navigate('/home');
+            }
+          } else {
+            navigate('/home');
+          }
+        } catch (err) {
+          console.error("Eroare la verificare preferințe:", err);
+          navigate('/home');
+        }
       } else {
         let errorMessage = 'Email sau parolă incorectă.';
         if (typeof data.detail === 'string') {
