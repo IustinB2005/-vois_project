@@ -1,119 +1,146 @@
+/* fonturi importate de pe google */
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Jost:wght@300;400;500;600;700&family=Figtree:wght@300;400;500;600;700;800;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* cutia principală care ține toată pagina și fundalul cu grila */
 .page-container {
   min-height: 100vh;
-  width: 100%;
-  background-color: #fcfcfc;
+  background-color: #ffffff;
   background-image: 
-    linear-gradient(to right, #f0f0f0 1px, transparent 1px),
-    linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
-  background-size: 48px 48px;
-  font-family: sans-serif;
-  color: black;
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  font-family: 'Jost', sans-serif;
+  color: #111;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
+/* linia roșie și subtilă care se mișcă pe fundal */
+.scan-line {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: rgba(220, 60, 70, 0.15);
+  box-shadow: 0 0 10px rgba(220, 60, 70, 0.15);
+  animation: scan-animation 8s linear infinite;
+  pointer-events: none;
+  z-index: 0; 
+}
+
+/* animația pentru linia roșie de pe fundal */
+@keyframes scan-animation {
+  0% { top: 85px; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { top: 100vh; opacity: 0; }
+}
+
+/* textul foarte mare și transparent din fundal */
+.watermark-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16vw;
+  font-weight: 900;
+  color: rgba(0, 0, 0, 0.025);
+  letter-spacing: -2px;
+  z-index: 0;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* bara de sus a paginii (header) */
 .top-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 2rem;
-  border-bottom: 1px solid #e5e7eb;
-  background-color: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(4px);
-  z-index: 20;
+  padding: 30px 60px;
+  border-bottom: 2px solid #111;
+  position: relative;
+  background-color: #ffffff; 
+  z-index: 2;
 }
 
+/* textul cinematch din stânga sus */
 .brand-logo {
+  font-family: 'Teko', sans-serif;
   font-weight: 900;
-  font-size: 1.25rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 24px;
 }
 
+/* zona centrală a paginii */
 .main-content {
   flex: 1;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 40px 20px;
   position: relative;
-  z-index: 10;
-  width: 100%;
-  padding: 2rem 1.5rem;
+  z-index: 1;
 }
 
-.watermark-bg {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.watermark-bg span {
-  font-size: 20vw;
-  font-weight: 900;
-  color: rgba(243, 244, 246, 0.7);
-  letter-spacing: -0.05em;
-  user-select: none;
-}
-
+/* containerul interior al elementelor de swipe */
 .swipe-wrapper-container {
-  width: 100%;
-  max-width: 28rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  z-index: 10;
+  width: 100%;
+  max-width: 520px;
 }
 
+/* titlul uriaș (Pick Your Film) */
 .page-title {
-  font-size: 3rem;
+  font-family: 'Teko', sans-serif;
+  font-size: 85px;
   font-weight: 900;
-  text-transform: uppercase;
   line-height: 0.9;
-  letter-spacing: -0.05em;
-  color: #111;
+  letter-spacing: -2px;
   margin: 0;
-  text-align: center;
-}
-
-.red-divider {
-  width: 3rem;
-  height: 0.25rem;
-  background-color: #ef4444;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.sub-title {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: #9ca3af;
   text-transform: uppercase;
-  margin-bottom: 2rem;
+  color: #111;
   text-align: center;
 }
 
+/* liniuța roșie de decor de sub titlu */
+.red-divider {
+  width: 40px;
+  height: 3px;
+  background-color: #ff4757;
+  margin: 18px 0 12px 0;
+}
+
+/* sub-titlul (movies remaining) */
+.sub-title {
+  font-family: 'Teko', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2.5px;
+  color: #777;
+  font-weight: 700;
+  margin: 0 0 30px 0;
+  text-transform: uppercase;
+}
+
+/* containerul cardurilor */
 .card-container {
+  position: relative;
   width: 300px;
   height: 420px;
-  position: relative;
-  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .swipe-card-wrapper {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  position: absolute !important;
 }
 
+/* cardul individual de film, optimizat pentru lag zero */
 .movie-card {
   width: 300px;
   height: 420px;
@@ -125,56 +152,92 @@
   display: flex;
   align-items: flex-end;
   cursor: grab;
-  border: 1px solid #e5e7eb;
+  border: 2px solid #111;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-drag: none;
+  touch-action: none;
 }
 
 .card-overlay {
   width: 100%;
   padding: 1.5rem;
   background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
 }
 
 .card-title {
   color: white;
   margin: 0;
   font-size: 22px;
-  font-weight: bold;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  font-family: 'Teko', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
+/* cardul când s-au terminat filmele */
 .finished-card {
   width: 300px;
   height: 420px;
-  background-color: #ffffff;
+  background: #ffffff;
+  border: 2px solid #111;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 10px 25px rgba(0,0,0,0.05);
   text-align: center;
   padding: 20px;
-  border: 1px solid #e5e7eb;
-  color: #111;
-  font-weight: bold;
+  box-shadow: 0px 15px 35px rgba(0,0,0,0.05);
 }
 
-.rewind-btn {
-  background-color: #111;
-  color: white;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  font-size: 0.75rem;
+.finished-card h3 {
+  font-family: 'Teko', sans-serif;
+  font-size: 24px;
+  letter-spacing: 1.5px;
+  color: #111;
   text-transform: uppercase;
-  padding: 0.85rem 2rem;
+  margin: 0;
+}
+
+/* butonul de rewind */
+.rewind-btn {
+  margin-top: 30px;
+  background-color: #111;
+  color: #fff;
   border: none;
+  padding: 14px 28px;
+  font-family: 'Teko', sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.2s;
   border-radius: 4px;
-  box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
 }
 
 .rewind-btn:hover {
-  background-color: #ef4444;
+  background-color: #ff4757;
+}
+
+/* Indicatorii stânga/dreapta pentru swipe */
+.swipe-indicator-left,
+.swipe-indicator-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Teko', sans-serif;
+  font-size: 12vw;
+  font-weight: 900;
+  color: rgba(0, 0, 0, 0.03);
+  z-index: 0;
+  pointer-events: none;
+  letter-spacing: -2px;
+}
+
+.swipe-indicator-left {
+  left: 8%;
+}
+
+.swipe-indicator-right {
+  right: 8%;
 }

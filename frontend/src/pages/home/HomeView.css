@@ -227,7 +227,7 @@
 }
 
 /* cardul individual pentru fiecare film */
-.movie-card {
+.home-movie-card {
   background: #ffffff;
   border: 2px solid #111;
   display: flex;
@@ -238,7 +238,7 @@
   height: 100%;
 }
 
-.movie-card:hover {
+.home-movie-card:hover {
   transform: translateY(-5px);
   border-color: #ff4757;
 }

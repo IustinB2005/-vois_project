@@ -73,7 +73,7 @@ export default function HomeView({ onLogout, onNavigateLobby }) {
         {/* Grila de filme recomandate */}
         <div className="movies-grid">
           {recommendedMovies.map((movie, index) => (
-            <div key={movie.title} className="movie-card">
+            <div key={movie.title} className="home-movie-card">
               <span className="movie-index">0{index + 1}</span>
               <div className="movie-poster-wrapper">
                 <img src={movie.image} alt={movie.title} className="movie-poster" />

@@ -132,42 +132,49 @@ def start_lobby(
     if len(lobby.users) < 2:
         raise HTTPException(status_code=400, detail="Ai nevoie de cel putin 2 membri")
 
-# 2. Agregarea preferintelor (Intersectie / Reuniune)
-    unique_genres = set()
-    oldest_date = "2099-01-01" # O data default in caz ca e ceva in neregula
-
-    for user in lobby.users:
-        # Adaugam genul tradus in set pt a elimina duplicatele
-        if user.preferred_genre in TMDB_GENRES_MAP:
-            unique_genres.add(TMDB_GENRES_MAP[user.preferred_genre])
-        
-        # Gasim cel mai vechi an ales de grup
-        if user.preferred_decade in DECADE_STARTS_MAP:
-            user_date = DECADE_STARTS_MAP[user.preferred_decade]
-            if user_date < oldest_date:
-                oldest_date = user_date
-
-    # 3. Pregatim datele pentru TMDB
-    # Daca avem genuri, le lipim cu "|" (ex: "28|35"). Daca nu, lasam None.
-    genres_or_string = "|".join(unique_genres) if unique_genres else None
-    
-    # 4. Apelam functia din core/tmdb.py
-    tmdb_response = discover_movies(
-        release_date_gte=oldest_date,
-        genres_or=genres_or_string
-    )
-
-
     lobby.status = "matching"
     db.commit()
     db.refresh(lobby)
 
     return {
         "message": "Lobby-ul a inceput",
-        "lobby_status": lobby.status,
-        "movies": tmdb_response.get("results", [])
+        "lobby_status": lobby.status
     }
 
+@router.get("/lobby/{code}/movies")
+def get_lobby_movies(
+    code: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    lobby = db.query(Lobby).filter(Lobby.code == code.upper()).first()
+    if not lobby or lobby.status != "matching": 
+        raise HTTPException(status_code=400, detail="Invalid lobby/status")
+
+    unique_genres = set()
+    oldest_date = "2099-01-01"
+    
+    for user in lobby.users:
+        if user.preferred_genre in TMDB_GENRES_MAP:
+            unique_genres.add(TMDB_GENRES_MAP[user.preferred_genre])
+        if user.preferred_decade in DECADE_STARTS_MAP:
+            user_date = DECADE_STARTS_MAP[user.preferred_decade]
+            if user_date < oldest_date:
+                oldest_date = user_date
+
+    if oldest_date == "2099-01-01":
+        oldest_date = None
+
+    # Transformam set-ul intr-o lista sortata alfabetic ca sa fie identica pentru toti
+    genres_list = sorted(list(unique_genres))
+    genres_or_string = "|".join(genres_list) if genres_list else None
+    
+    tmdb_response = discover_movies(
+        release_date_gte=oldest_date, 
+        genres_or=genres_or_string
+    )
+
+    return {"movies": tmdb_response.get("results", [])}
 @router.post("/register")
 def register(
     user: UserCreate,
@@ -356,3 +363,36 @@ def get_movie_recommendations(
     return {
         "movies": movies[:30]
     }
+
+@router.get("/lobby/{code}/match")
+def check_lobby_match(
+    code: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    lobby = db.query(Lobby).filter(Lobby.code == code.upper()).first()
+    if not lobby:
+        raise HTTPException(status_code=404, detail="Cod invalid")
+
+    total_users = len(lobby.users)
+    if total_users == 0:
+        return {"status": "waiting"}
+
+    # Luam absolut TOATE voturile din lobby pentru a evita erorile bazei de date cu variabilele Boolean
+    all_votes = db.query(Vote).filter(Vote.lobby_id == lobby.id).all()
+    
+    vote_counts = {}
+    for vote in all_votes:
+        # Verificam daca e "Like" folosind logica nativa din Python
+        if vote.is_like:
+            vote_counts[vote.movie_id] = vote_counts.get(vote.movie_id, 0) + 1
+
+    # Daca oricare film are la fel de multe like-uri cati useri sunt in lobby, e match perfect
+    for movie_id, count in vote_counts.items():
+        if count >= total_users:
+            return {
+                "status": "perfect_match",
+                "movie_id": movie_id
+            }
+
+    return {"status": "waiting"}

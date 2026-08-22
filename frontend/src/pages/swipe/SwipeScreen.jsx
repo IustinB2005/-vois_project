@@ -1,19 +1,21 @@
 import React, { useState, useMemo, createRef, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SwipeView from './SwipeView';
 
 export default function SwipeScreen() {
   const [movies, setMovies] = useState([]);
   const [lastAction, setLastAction] = useState(null);
   const [totalMovies, setTotalMovies] = useState(0);
+  const [match, setMatch] = useState(null); 
+  const [allMoviesCache, setAllMoviesCache] = useState({}); 
 
-  
   const location = useLocation();
+  const navigate = useNavigate();
   const lobbyCode = location.state?.lobbyCode || "1234"; 
 
   useEffect(() => {
-    fetch(`http://localhost:8000/lobby/${lobbyCode}/start`, {
-      method: 'POST', 
+    fetch(`http://localhost:8000/lobby/${lobbyCode}/movies`, {
+      method: 'GET', 
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
         'Content-Type': 'application/json'
@@ -27,12 +29,42 @@ export default function SwipeScreen() {
         if (data && Array.isArray(data.movies)) {
           setMovies(data.movies);
           setTotalMovies(data.movies.length);
-        } else {
-          console.error("Nu s-a gasit array-ul movies in raspuns:", data);
+          const cache = {};
+          data.movies.forEach(m => cache[m.id] = m);
+          setAllMoviesCache(cache);
         }
       })
       .catch((err) => console.error("Error fetching lobby movies:", err));
   }, [lobbyCode]);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (match) return;
+
+      try {
+        const res = await fetch(`http://localhost:8000/lobby/${lobbyCode}/match`, {
+          method: 'GET',
+          headers: { 
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Cache-Control': 'no-cache'
+          },
+          cache: 'no-store'
+        });
+        const data = await res.json();
+        
+        if (data.status === "perfect_match") {
+          const winningMovie = allMoviesCache[data.movie_id] || allMoviesCache[String(data.movie_id)];
+          if (winningMovie) {
+            setMatch(winningMovie);
+          }
+        }
+      } catch (err) {
+        console.error("Eroare polling match:", err);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [lobbyCode, match, allMoviesCache]);
 
   const childRefs = useMemo(
     () => movies.map(() => createRef()),
@@ -42,12 +74,14 @@ export default function SwipeScreen() {
   const handleSwipe = async (direction, movie, index) => {
     setLastAction({ movie, index });
     
+    setTimeout(() => {
+      setMovies((prevMovies) => prevMovies.filter((m) => m.id !== movie.id));
+    }, 300);
+
     const voteData = {
       movie_id: movie.id,
       is_like: direction === 'right' 
     };
-
-    console.log(`Vote for ${movie.title || movie.nume}:`, voteData);
 
     try {
       const response = await fetch(`http://localhost:8000/lobby/${lobbyCode}/swipe`, {
@@ -62,18 +96,12 @@ export default function SwipeScreen() {
       const result = await response.json();
 
       if (result.status === "perfect_match") {
-        alert("Avem un Perfect Match! Rata aprobare 100%");
-      } else if (result.status === "partial_match") {
-        console.log("Meci partial! Aprobare >= 70%");
-      } else if (result.status === "waiting") {
-        console.log("Vot inregistrat. Asteptam colegii...");
+        setMatch(movie);
+        return; 
       }
-
     } catch (error) {
       console.error("Eroare la trimiterea votului:", error);
     }
-
-    setMovies((prevMovies) => prevMovies.filter((m) => m.id !== movie.id));
   };
 
   const handleRewind = async () => {
@@ -87,6 +115,48 @@ export default function SwipeScreen() {
       await childRefs[index].current.restoreCard();
     }
   };
+
+  // ECRANUL DE MATCH REDESIGNAT ÎN STILUL INDUSTRIAL
+  if (match) {
+    return (
+      <div className="page-container">
+        <div className="scan-line"></div>
+        <div className="background-watermark">MATCH</div>
+
+        <header className="top-header">
+          <div className="brand-logo">CINEMATCH</div>
+          <div className="header-right-text" style={{ fontFamily: 'Teko, sans-serif', fontSize: '16px', fontWeight: 800, letterSpacing: '2px', color: '#ff4757', textTransform: 'uppercase' }}>
+            IT'S A MATCH!
+          </div>
+        </header>
+
+        <main className="main-content">
+          <div className="swipe-wrapper-container">
+            <div className="title-section" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '30px' }}>
+              <h1 className="main-title" style={{ fontSize: '70px', lineHeight: '0.9', margin: 0 }}>IT'S A<br />MATCH!</h1>
+              <div className="red-divider"></div>
+              <p className="subtitle" style={{ fontFamily: 'Teko, sans-serif', fontSize: '18px', letterSpacing: '2.5px', color: '#777', fontWeight: 700, margin: 0 }}>EVERYONE WANTS TO WATCH</p>
+            </div>
+            
+            <div className="card-container">
+              <div 
+                className="movie-card" 
+                style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w500${match.poster_path})`, cursor: 'default' }}
+              >
+                <div className="card-overlay">
+                  <h3 className="card-title">{match.nume || match.title}</h3>
+                </div>
+              </div>
+            </div>
+
+            <button className="massive-black-btn" onClick={() => navigate('/lobby')} style={{ marginTop: '30px', width: '300px' }}>
+              ← BACK TO LOBBY
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <SwipeView
