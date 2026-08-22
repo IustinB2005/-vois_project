@@ -41,7 +41,7 @@ export default function Lobby() {
       if (response.ok) {
         setRoomData(data);
         if (data.status === 'matching') {
-          navigate('/room');
+          navigate('/swipe', { state: { lobbyCode: roomData.code } });
         }
       }
     } catch (err) {
@@ -96,7 +96,8 @@ export default function Lobby() {
       });
       const data = await response.json();
       if (response.ok) {
-        navigate('/room');
+        navigate('/swipe', { state: { lobbyCode: roomData.code } });
+      
       } else {
         setError(data.detail || 'Nu se poate porni runda (ai nevoie de cel puțin 2 membri!)');
       }

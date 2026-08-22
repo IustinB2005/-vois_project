@@ -6,6 +6,7 @@ import Room from './pages/Room';
 import Home from './pages/home/Home';  
 import Lobby from './pages/lobby/Lobby';
 import ProtectedRoute from './ProtectedRoute'; // <-- 1. Importul corect (fișierul e direct în src)
+import SwipeScreen from './pages/swipe/SwipeScreen';
 
 function App() {
   return (
@@ -51,6 +52,15 @@ function App() {
               <Questions />
             </ProtectedRoute>
           } 
+        />
+
+        <Route 
+        path="/swipe" 
+       element={
+        <ProtectedRoute>
+          <SwipeScreen />
+        </ProtectedRoute>
+      } 
         />
       </Routes>
     </BrowserRouter>
