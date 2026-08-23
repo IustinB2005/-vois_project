@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, Query
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.core.security import hash_password
@@ -99,13 +99,18 @@ TMDB_GENRES_MAP = {
     "SF": "878"
 }
 
+DECADE_RANGES_MAP = {
+    "1970-1980": ("1970-01-01", "1979-12-31"),
+    "1980-1990": ("1980-01-01", "1989-12-31"),
+    "1990-2000": ("1990-01-01", "1999-12-31"),
+    "2000-2010": ("2000-01-01", "2009-12-31"),
+    "2010-2020": ("2010-01-01", "2019-12-31"),
+    "2020+": ("2020-01-01", None)
+}
+
 DECADE_STARTS_MAP = {
-    "1970-1980": "1970-01-01",
-    "1980-1990": "1980-01-01",
-    "1990-2000": "1990-01-01",
-    "2000-2010": "2000-01-01",
-    "2010-2020": "2010-01-01",
-    "2020+": "2020-01-01"
+    decade: date_range[0]
+    for decade, date_range in DECADE_RANGES_MAP.items()
 }
 
 
@@ -341,18 +346,32 @@ def swipe_movie(
 
 @router.get("/movies/recommendations")
 def get_movie_recommendations(
+    query: str | None = Query(default=None, max_length=100),
     current_user: User = Depends(get_current_user)
 ):
-    movies = []
+    try:
+        if query and query.strip():
+            response = search_movies(query.strip())
+        else:
+            release_date_gte, release_date_lte = DECADE_RANGES_MAP.get(
+                current_user.preferred_decade,
+                (None, None)
+            )
+            genre_id = TMDB_GENRES_MAP.get(current_user.preferred_genre)
+            response = discover_movies(
+                release_date_gte=release_date_gte,
+                release_date_lte=release_date_lte,
+                genres_or=genre_id
+            )
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail="TMDB nu este disponibil momentan") from exc
 
-    for page in range(1, 4):
-        response = discover_movies()
+    movies = [
+        movie for movie in response.get("results", [])
+        if movie.get("poster_path")
+    ]
 
-        movies.extend(response.get("results", []))
-
-    return {
-        "movies": movies[:30]
-    }
+    return {"movies": movies[:12]}
 
 @router.get("/lobby/{code}/match")
 def check_lobby_match(
