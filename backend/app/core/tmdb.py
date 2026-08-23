@@ -12,7 +12,25 @@ HEADERS = {
     "accept": "application/json"
 }
 
-def discover_movies(release_date_gte: str | None = None, genres_or: str | None = None,page: int = 1):
+def _get(path: str, params: dict):
+    if not TMDB_ACCESS_TOKEN:
+        raise RuntimeError("TMDB_ACCESS_TOKEN is not configured")
+
+    response = requests.get(
+        f"{TMDB_BASE_URL}{path}",
+        params=params,
+        headers=HEADERS,
+        timeout=10
+    )
+    response.raise_for_status()
+    return response.json()
+
+def discover_movies(
+    release_date_gte: str | None = None,
+    release_date_lte: str | None = None,
+    genres_or: str | None = None,
+    page: int = 1
+):
     params = {
         "language": "en-Us",
         "include_adult": False,
@@ -23,39 +41,27 @@ def discover_movies(release_date_gte: str | None = None, genres_or: str | None =
     if release_date_gte is not None:
         params["primary_release_date.gte"] = release_date_gte
 
+    if release_date_lte is not None:
+        params["primary_release_date.lte"] = release_date_lte
+
     if genres_or is not None:
         params["with_genres"] = genres_or
 
-    response = requests.get(
-        f"{TMDB_BASE_URL}/discover/movie",
-        params=params,
-        headers=HEADERS
-    )
-    
-    response.raise_for_status()
-    return response.json()
+    return _get("/discover/movie", params)
 
-def search_movies(query: str):
-    response = requests.get(
-        f"{TMDB_BASE_URL}/search/movie",
-        params={
+def search_movies(query: str, page: int = 1):
+    return _get(
+        "/search/movie",
+        {
             "query": query,
-            "language": "ro-RO"
-        },
-        headers=HEADERS
+            "language": "ro-RO",
+            "include_adult": False,
+            "page": page
+        }
     )
-    
-    response.raise_for_status()
-    return response.json()
 
 def get_movie_genres():
-    response = requests.get(
-        f"{TMDB_BASE_URL}/genre/movie/list",
-        params={
-            "language": "ro-RO"
-        },
-        headers=HEADERS
+    return _get(
+        "/genre/movie/list",
+        {"language": "ro-RO"}
     )
-    
-    response.raise_for_status()
-    return response.json()

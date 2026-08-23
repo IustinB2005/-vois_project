@@ -1,4 +1,3 @@
-import React from 'react';
 import './HomeView.css';
 
 /* Iconițe SVG */
@@ -17,13 +16,7 @@ const LogoutIcon = () => (
   </svg>
 );
 
-export default function HomeView({ onLogout, onNavigateLobby, onNavigatePreferences }) {
-  const recommendedMovies = [
-    { title: 'PARASITE', year: '2019', director: 'Bong Joon-ho', image: 'https://images.unsplash.com/photo-1614201842267-206a09286c3b?w=500&auto=format&fit=crop&q=60' },
-    { title: 'DUNE', year: '2021', director: 'Denis Villeneuve', image: 'https://images.unsplash.com/photo-1679129396357-6b11683760bc?w=500&auto=format&fit=crop&q=60' },
-    { title: 'INTERSTELLAR', year: '2014', director: 'Christopher Nolan', image: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=500&auto=format&fit=crop&q=60' },
-    { title: 'EVERYTHING EVERYWHERE ALL AT ONCE', year: '2022', director: 'The Daniels', image: 'https://images.unsplash.com/photo-1603236405450-e74c465a89a8?w=500&auto=format&fit=crop&q=60' }
-  ];
+export default function HomeView({ movies, searchQuery, onSearchChange, isLoading, error, onLogout, onNavigateLobby, onNavigatePreferences }) {
 
   return (
     <div className="home-container">
@@ -48,8 +41,10 @@ export default function HomeView({ onLogout, onNavigateLobby, onNavigatePreferen
             <span className="search-icon"><SearchIcon /></span>
             <input 
               type="text" 
-              placeholder="Search for a movie, director, actor..." 
+              placeholder="Search for a movie..."
               className="top-search-input"
+              value={searchQuery}
+              onChange={(event) => onSearchChange(event.target.value)}
             />
           </div>
 
@@ -74,20 +69,25 @@ export default function HomeView({ onLogout, onNavigateLobby, onNavigatePreferen
         </div>
 
         {/* Grila de filme recomandate */}
-        <div className="movies-grid">
-          {recommendedMovies.map((movie, index) => (
-            <div key={movie.title} className="home-movie-card">
-              <span className="movie-index">0{index + 1}</span>
-              <div className="movie-poster-wrapper">
-                <img src={movie.image} alt={movie.title} className="movie-poster" />
+        {isLoading && <p className="movies-status">LOADING MOVIES...</p>}
+        {!isLoading && error && <p className="movies-status movies-error">{error}</p>}
+        {!isLoading && !error && movies.length === 0 && <p className="movies-status">NO MOVIES FOUND.</p>}
+        {!isLoading && !error && (
+          <div className="movies-grid">
+            {movies.map((movie, index) => (
+              <div key={movie.id} className="home-movie-card">
+                <span className="movie-index">{String(index + 1).padStart(2, '0')}</span>
+                <div className="movie-poster-wrapper">
+                  <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={`Poster ${movie.title || movie.original_title}`} className="movie-poster" loading="lazy" />
+                </div>
+                <div className="movie-info">
+                  <h3 className="movie-title">{movie.title || movie.original_title}</h3>
+                  <p className="movie-details">{movie.release_date?.slice(0, 4) || 'YEAR N/A'} · RATING {movie.vote_average?.toFixed(1) || 'N/A'}</p>
+                </div>
               </div>
-              <div className="movie-info">
-                <h3 className="movie-title">{movie.title}</h3>
-                <p className="movie-details">{movie.year} · {movie.director}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
       </main>
     </div>
