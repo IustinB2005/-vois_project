@@ -409,3 +409,32 @@ def update_user_preferences(
         "preferred_decade": current_user.preferred_decade,
         "preferred_genre": current_user.preferred_genre
     }
+
+
+@router.post("/register")
+def register_user(
+    user_data: UserCreate,
+    db: Session = Depends(get_db)
+):
+    # Verificăm dacă există deja un user cu acest email
+    existing_user = db.query(User).filter(User.email == user_data.email).first()
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email-ul este deja folosit")
+
+    # Hashuim parola înainte de a o salva în baza de date
+    hashed_pass = hash_password(user_data.password)
+
+    new_user = User(
+        username=user_data.username,
+        email=user_data.email,
+        password=hashed_pass
+    )
+    
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return {
+        "message": "Cont creat cu succes",
+        "user_id": new_user.id
+    }
